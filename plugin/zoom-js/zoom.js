@@ -49,14 +49,7 @@ var zoom = (function () {
   var panEngageTimeout = -1,
     panUpdateInterval = -1;
 
-  // Check for transform support so that we can fallback otherwise
-  var supportsTransforms = 'WebkitTransform' in document.body.style ||
-    'MozTransform' in document.body.style ||
-    'msTransform' in document.body.style ||
-    'OTransform' in document.body.style ||
-    'transform' in document.body.style;
-
-  if (supportsTransforms) {
+  if (supportsTransforms()) {
     // The easing that will be applied when we zoom in/out
     document.body.style.transition = 'transform 0.8s ease';
     document.body.style.OTransition = '-o-transform 0.8s ease';
@@ -80,6 +73,14 @@ var zoom = (function () {
     }
   });
 
+  function supportsTransforms() {
+    return 'WebkitTransform' in document.body.style ||
+      'MozTransform' in document.body.style ||
+      'msTransform' in document.body.style ||
+      'OTransform' in document.body.style ||
+      'transform' in document.body.style;
+  }
+
 	/**
 	 * Applies the CSS required to zoom in, prefers the use of CSS3
 	 * transforms but falls back on zoom for IE.
@@ -99,7 +100,7 @@ var zoom = (function () {
     rect.x -= (window.innerWidth - (rect.width * scale)) / 2;
     rect.y -= (window.innerHeight - (rect.height * scale)) / 2;
 
-    if (supportsTransforms) {
+    if (supportsTransforms()) {
       // Reset
       if (scale === 1) {
         document.body.style.transform = '';
